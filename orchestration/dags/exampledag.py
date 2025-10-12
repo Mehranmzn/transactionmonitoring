@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from TransactionMonitoring.entity.config_entity import ModelTrainerConfig
-from TransactionMonitoring.entity.artificat_ent import DataTransformationArtifact
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
-from TransactionMonitoring.components.model_trainer import ModelTrainer
-from TransactionMonitoring.utils.main_utils.utils import load_numpy_array_data
+from src.typing.config_types import ModelTrainerConfig
+from src.typing.artifact_types import DataTransformationArtifact
+from src.exception.exception import SrcException
+from src.components.model_trainer import ModelTrainer
+from src.utils.main_utils.utils import load_numpy_array_data
 
 # Default arguments for the DAG
 default_args = {
@@ -53,7 +53,7 @@ with DAG(
                 "y_test": y_test,
             }
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
 
     task_load_data = PythonOperator(
         task_id='load_data',
@@ -87,7 +87,7 @@ with DAG(
             
             return model_trainer_artifact
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
 
     task_train_model = PythonOperator(
         task_id='train_model',
@@ -113,7 +113,7 @@ with DAG(
                 classificationmetric=model_trainer_artifact.test_metric_artifact,
             )
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
 
     task_track_experiments = PythonOperator(
         task_id='track_experiments',
@@ -132,7 +132,7 @@ with DAG(
             # Save the trained model to a defined path
             save_object("final_model/final_model.pkl", model_trainer_artifact.trained_model_file_path)
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
 
     task_save_final_model = PythonOperator(
         task_id='save_final_model',

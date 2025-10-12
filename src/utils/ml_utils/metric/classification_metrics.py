@@ -1,5 +1,5 @@
-from TransactionMonitoring.entity.artificat_ent import ClassificationMetricArtifact
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
+from src.typing.artifact_types import ClassificationMetricArtifact
+from src.exception.exception import SrcException
 from sklearn.metrics import f1_score,precision_score,recall_score
 import sys
 
@@ -15,4 +15,4 @@ def get_classification_score(y_true,y_pred)->ClassificationMetricArtifact:
                     recall_score=model_recall_score)
         return classification_metric
     except Exception as e:
-        raise TransactionMonitoringException(e,sys)
+        raise SrcException(e,sys)

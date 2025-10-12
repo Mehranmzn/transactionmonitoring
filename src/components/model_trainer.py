@@ -1,13 +1,13 @@
 import os
 import sys
-from TransactionMonitoring.exception.exception import TransactionMonitoringException 
-from TransactionMonitoring.logging.logger import logging
-from TransactionMonitoring.entity.artificat_ent import DataTransformationArtifact,ModelTrainerArtifact
-from TransactionMonitoring.entity.config_entity import ModelTrainerConfig
-from TransactionMonitoring.utils.ml_utils.model.estimator import TransactionMonitoring
-from TransactionMonitoring.utils.main_utils.utils import save_object,load_object
-from TransactionMonitoring.utils.main_utils.utils import load_numpy_array_data,evaluate_models
-from TransactionMonitoring.utils.ml_utils.metric.classification_metrics import get_classification_score
+from src.exception.exception import SrcException 
+from src.logging.logger import logging
+from src.typing.artifact_types import DataTransformationArtifact,ModelTrainerArtifact
+from src.typing.config_types import ModelTrainerConfig
+from src.utils.ml_utils.model.estimator import TransactionMonitoring
+from src.utils.main_utils.utils import save_object,load_object
+from src.utils.main_utils.utils import load_numpy_array_data,evaluate_models
+from src.utils.ml_utils.metric.classification_metrics import get_classification_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsClassifier
@@ -32,7 +32,7 @@ class ModelTrainer:
             self.model_trainer_config=model_trainer_config
             self.data_transformation_artifact=data_transformation_artifact
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def track_mlflow(self,best_model,classificationmetric):
         mlflow.set_registry_uri("https://dagshub.com/mehran1414/tm_data.mlflow")
@@ -163,4 +163,4 @@ class ModelTrainer:
 
             
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)

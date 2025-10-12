@@ -4,13 +4,13 @@ import pandas as pd
 import certifi
 from dotenv import load_dotenv
 import pymongo
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
-from TransactionMonitoring.logging.logger import logging
-from TransactionMonitoring.pipeline.aws_training_pipeline import TrainingPipeline
-from TransactionMonitoring.utils.main_utils.utils import load_object
-from TransactionMonitoring.utils.ml_utils.model.estimator import TransactionMonitoring
-from TransactionMonitoring.constant.training_pipeline import DATA_INGESTION_COLLECTION_NAME
-from TransactionMonitoring.constant.training_pipeline import DATA_INGESTION_DATABASE_NAME
+from src.exception.exception import SrcException
+from src.logging.logger import logging
+from src.pipeline.aws_training_pipeline import TrainingPipeline
+from src.utils.main_utils.utils import load_object
+from src.utils.ml_utils.model.estimator import TransactionMonitoring
+from src.constant.training_pipeline import DATA_INGESTION_COLLECTION_NAME
+from src.constant.training_pipeline import DATA_INGESTION_DATABASE_NAME
 from fastapi.templating import Jinja2Templates
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -54,7 +54,7 @@ async def train_route():
         train_pipeline.run_pipeline()
         return Response("Training is successful")
     except Exception as e:
-        raise TransactionMonitoringException(e,sys)
+        raise SrcException(e,sys)
     
 @app.post("/predict")
 async def predict_route(request: Request,file: UploadFile = File(...)):
@@ -77,7 +77,7 @@ async def predict_route(request: Request,file: UploadFile = File(...)):
         return templates.TemplateResponse("table.html", {"request": request, "table": table_html})
         
     except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
 
     
 if __name__=="__main__":

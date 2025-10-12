@@ -1,12 +1,12 @@
-from TransactionMonitoring.entity.artificat_ent import DataIngestionArtifact,DataValidationArtifact
-from TransactionMonitoring.entity.config_entity import DataValidationConfig
-from TransactionMonitoring.exception.exception import TransactionMonitoringException 
-from TransactionMonitoring.logging.logger import logging 
-from TransactionMonitoring.constant.training_pipeline import SCHEMA_FILE_PATH
+from src.typing.artifact_types import DataIngestionArtifact,DataValidationArtifact
+from src.typing.config_types import DataValidationConfig
+from src.exception.exception import SrcException 
+from src.logging.logger import logging 
+from src.constant.training_pipeline import SCHEMA_FILE_PATH
 from scipy.stats import ks_2samp
 import pandas as pd
 import os,sys
-from TransactionMonitoring.utils.main_utils.utils import read_yaml_file,write_yaml_file
+from src.utils.main_utils.utils import read_yaml_file,write_yaml_file
 
 class DataValidation:
     def __init__(self,data_ingestion_artifact:DataIngestionArtifact,
@@ -17,14 +17,14 @@ class DataValidation:
             self.data_validation_config=data_validation_config
             self._schema_config = read_yaml_file(SCHEMA_FILE_PATH)
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     @staticmethod
     def read_data(file_path)->pd.DataFrame:
         try:
             return pd.read_csv(file_path)
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def validate_number_of_columns(self,dataframe:pd.DataFrame)->bool:
         try:
@@ -35,7 +35,7 @@ class DataValidation:
                 return True
             return False
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def detect_dataset_drift(self,base_df,current_df,threshold=0.05)->bool:
         try:
@@ -63,7 +63,7 @@ class DataValidation:
             write_yaml_file(file_path=drift_report_file_path,content=report)
 
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     
     def initiate_data_validation(self)->DataValidationArtifact:
@@ -108,7 +108,7 @@ class DataValidation:
             )
             return data_validation_artifact
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
 
 
 

@@ -1,11 +1,11 @@
-from TransactionMonitoring.components.data_ingestion import DataIngestion
-from TransactionMonitoring.components.data_transformation import DataTransformation
-from TransactionMonitoring.components.data_validation import DataValidation
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
-from TransactionMonitoring.logging.logger import logging
-from TransactionMonitoring.entity.config_entity import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig
-from TransactionMonitoring.entity.config_entity import DataTransformationConfig, ModelTrainerConfig
-from TransactionMonitoring.components.model_trainer import ModelTrainer
+from src.components.data_ingestion import DataIngestion
+from src.components.data_transformation import DataTransformation
+from src.components.data_validation import DataValidation
+from src.exception.exception import SrcException
+from src.logging.logger import logging
+from src.typing.config_types import DataIngestionConfig, TrainingPipelineConfig, DataValidationConfig
+from src.typing.config_types import DataTransformationConfig, ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
 
 if __name__=='__main__':
     try:
@@ -38,7 +38,7 @@ if __name__=='__main__':
         logging.info("Model training completed")
 
 
-    except TransactionMonitoringException as e:
+    except SrcException as e:
         logging.error(e)
     except Exception as e:
         logging.error(e)

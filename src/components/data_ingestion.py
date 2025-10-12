@@ -1,7 +1,7 @@
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
-from TransactionMonitoring.logging.logger import logging
-from TransactionMonitoring.entity.config_entity import DataIngestionConfig
-from TransactionMonitoring.entity.artificat_ent import DataIngestionArtifact
+from src.exception.exception import SrcException
+from src.logging.logger import logging
+from src.typing.config_types import DataIngestionConfig
+from src.typing.artifact_types import DataIngestionArtifact
 import os
 import sys
 import numpy as np
@@ -20,7 +20,7 @@ class DataIngestion:
         try:
             self.data_ingestion_config=data_ingestion_config
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def export_collection_as_dataframe(self):
         """
@@ -41,7 +41,7 @@ class DataIngestion:
             df.replace({"na":np.nan},inplace=True)
             return df
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def export_data_into_feature_store(self,dataframe: pd.DataFrame):
         try:
@@ -53,7 +53,7 @@ class DataIngestion:
             return dataframe
             
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def split_data_as_train_test(self,dataframe: pd.DataFrame):
         try:
@@ -83,7 +83,7 @@ class DataIngestion:
 
             
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
         
     def initiate_data_ingestion(self):
@@ -96,4 +96,4 @@ class DataIngestion:
             return dataingestionartifact
 
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)

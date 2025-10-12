@@ -7,18 +7,18 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.pipeline import Pipeline
 
-from TransactionMonitoring.constant.training_pipeline import TARGET_COLUMN
-from TransactionMonitoring.constant.training_pipeline import DATA_TRANSFORMATION_IMPUTER_PARAMS
+from src.constant.training_pipeline import TARGET_COLUMN
+from src.constant.training_pipeline import DATA_TRANSFORMATION_IMPUTER_PARAMS
 
-from TransactionMonitoring.entity.artificat_ent import (
+from src.typing.artifact_types import (
     DataTransformationArtifact,
     DataValidationArtifact
 )
 
-from TransactionMonitoring.entity.config_entity import DataTransformationConfig
-from TransactionMonitoring.exception.exception import TransactionMonitoringException 
-from TransactionMonitoring.logging.logger import logging
-from TransactionMonitoring.utils.main_utils.utils import save_numpy_array_data,save_object
+from src.typing.config_types import DataTransformationConfig
+from src.exception.exception import SrcException 
+from src.logging.logger import logging
+from src.utils.main_utils.utils import save_numpy_array_data,save_object
 
 class DataTransformation:
     def __init__(self,data_validation_artifact:DataValidationArtifact,
@@ -27,14 +27,14 @@ class DataTransformation:
             self.data_validation_artifact:DataValidationArtifact=data_validation_artifact
             self.data_transformation_config:DataTransformationConfig=data_transformation_config
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     @staticmethod
     def read_data(file_path) -> pd.DataFrame:
         try:
             return pd.read_csv(file_path)
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
         
     def get_data_transformer_object(cls) -> Pipeline:
         """
@@ -72,7 +72,7 @@ class DataTransformation:
             return processor
 
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
 
         
     def initiate_data_transformation(self)->DataTransformationArtifact:
@@ -163,4 +163,4 @@ class DataTransformation:
 
             
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)

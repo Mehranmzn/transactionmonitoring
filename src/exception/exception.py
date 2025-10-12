@@ -1,7 +1,7 @@
 import sys
-from TransactionMonitoring.logging import logger
+from src.logging import logger
 
-class TransactionMonitoringException(Exception):
+class SrcException(Exception):
     def __init__(self,error_message,error_details:sys):
         self.error_message = error_message
         _,_,exc_tb = error_details.exc_info()
@@ -20,7 +20,7 @@ if __name__=='__main__':
         print("This will not be printed",a)
     except Exception as e:
         logger.logging.error(f"An error occurred: {str(e)}")
-        raise TransactionMonitoringException(
+        raise SrcException(
             error_message=str(e),
             error_details=sys
         )

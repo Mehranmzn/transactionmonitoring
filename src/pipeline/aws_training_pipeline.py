@@ -1,28 +1,28 @@
 import os
 import sys
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
-from TransactionMonitoring.logging.logger import logging
-from TransactionMonitoring.components.data_ingestion import DataIngestion
-from TransactionMonitoring.components.data_validation import DataValidation
-from TransactionMonitoring.components.data_transformation import DataTransformation
-from TransactionMonitoring.components.model_trainer import ModelTrainer
-from TransactionMonitoring.entity.config_entity import(
+from src.exception.exception import SrcException
+from src.logging.logger import logging
+from src.components.data_ingestion import DataIngestion
+from src.components.data_validation import DataValidation
+from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
+from src.typing.config_types import(
     TrainingPipelineConfig,
     DataIngestionConfig,
     DataValidationConfig,
     DataTransformationConfig,
     ModelTrainerConfig,
 )
-from TransactionMonitoring.entity.artificat_ent import (
+from src.typing.artifact_types import (
     DataIngestionArtifact,
     DataValidationArtifact,
     DataTransformationArtifact,
     ModelTrainerArtifact,
 )
 
-from TransactionMonitoring.constant.training_pipeline import TRAINING_BUCKET_NAME
-from TransactionMonitoring.cloud.AWS.s3_syncer import S3Sync
-from TransactionMonitoring.constant.training_pipeline import SAVED_MODEL_DIR
+from src.constant.training_pipeline import TRAINING_BUCKET_NAME
+from src.cloud.AWS.s3_syncer import S3Sync
+from src.constant.training_pipeline import SAVED_MODEL_DIR
 import sys
 
 
@@ -42,7 +42,7 @@ class TrainingPipeline:
             return data_ingestion_artifact
         
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def start_data_validation(self,data_ingestion_artifact:DataIngestionArtifact):
         try:
@@ -52,7 +52,7 @@ class TrainingPipeline:
             data_validation_artifact=data_validation.initiate_data_validation()
             return data_validation_artifact
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def start_data_transformation(self,data_validation_artifact:DataValidationArtifact):
         try:
@@ -63,7 +63,7 @@ class TrainingPipeline:
             data_transformation_artifact = data_transformation.initiate_data_transformation()
             return data_transformation_artifact
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     def start_model_trainer(self,data_transformation_artifact:DataTransformationArtifact)->ModelTrainerArtifact:
         try:
@@ -81,7 +81,7 @@ class TrainingPipeline:
             return model_trainer_artifact
 
         except Exception as e:
-            raise TransactionMonitoringException(e, sys)
+            raise SrcException(e, sys)
 
     ## local artifact is going to s3 bucket    
     def sync_artifact_dir_to_s3(self):
@@ -89,7 +89,7 @@ class TrainingPipeline:
             aws_bucket_url = f"s3://{TRAINING_BUCKET_NAME}/artifact/{self.training_pipeline_config.timestamp}"
             self.s3_sync.sync_folder_to_s3(folder = self.training_pipeline_config.artifact_dir,aws_bucket_url=aws_bucket_url)
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     ## local final model is going to s3 bucket 
         
@@ -98,7 +98,7 @@ class TrainingPipeline:
             aws_bucket_url = f"s3://{TRAINING_BUCKET_NAME}/final_model/{self.training_pipeline_config.timestamp}"
             self.s3_sync.sync_folder_to_s3(folder = self.training_pipeline_config.model_dir,aws_bucket_url=aws_bucket_url)
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     
     
@@ -114,6 +114,6 @@ class TrainingPipeline:
             
             return model_trainer_artifact
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
         
     

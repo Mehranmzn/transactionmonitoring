@@ -1,9 +1,9 @@
 import os
 import sys
 
-from TransactionMonitoring.constant.training_pipeline import SAVED_MODEL_DIR,MODEL_FILE_NAME
-from TransactionMonitoring.exception.exception import TransactionMonitoringException
-from TransactionMonitoring.logging.logger import logging
+from src.constant.training_pipeline import SAVED_MODEL_DIR,MODEL_FILE_NAME
+from src.exception.exception import SrcException
+from src.logging.logger import logging
 
 class TransactionMonitoring:
     def __init__(self,preprocessor,model):
@@ -11,7 +11,7 @@ class TransactionMonitoring:
             self.preprocessor = preprocessor
             self.model = model
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
     
     def predict(self,x):
         try:
@@ -19,4 +19,4 @@ class TransactionMonitoring:
             y_hat = self.model.predict(x_transform)
             return y_hat
         except Exception as e:
-            raise TransactionMonitoringException(e,sys)
+            raise SrcException(e,sys)
